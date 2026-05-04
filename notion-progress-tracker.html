@@ -11,18 +11,30 @@
     --muted: #e4e4e7;
     --text: #18181b;
     --text-muted: #a1a1aa;
-    --bg: #ffffff;
+    --dot-bg: #ffffff;
+    --halo: rgba(24, 24, 27, 0.07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --accent: #fafafa;
+      --muted: #3f3f46;
+      --text: #fafafa;
+      --text-muted: #71717a;
+      --dot-bg: transparent;
+      --halo: rgba(250, 250, 250, 0.08);
+    }
   }
 
   * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
-    background: var(--bg);
+    background: transparent;
   }
 
   body {
-    padding: 36px 28px 28px;
+    padding: 18px 24px 14px;
     font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
     color: var(--text);
     -webkit-font-smoothing: antialiased;
@@ -35,7 +47,7 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 32px;
+    margin-bottom: 18px;
   }
 
   .title {
@@ -87,11 +99,11 @@
   }
 
   .dot {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    background: var(--bg);
-    border: 2px solid var(--muted);
+    background: var(--dot-bg);
+    border: 1.5px solid var(--muted);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,13 +116,17 @@
   .step[data-state="done"] .dot {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: var(--dot-bg);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .step[data-state="done"] .dot { color: #18181b; }
   }
 
   .step[data-state="active"] .dot {
     border-color: var(--accent);
     color: var(--accent);
-    box-shadow: 0 0 0 5px rgba(24, 24, 27, 0.07);
+    box-shadow: 0 0 0 5px var(--halo);
   }
 
   .label {
@@ -136,11 +152,13 @@
     text-transform: uppercase;
   }
 
+  .line-bg, .line-fill { top: 12px; }
+
   @media (max-width: 520px) {
-    body { padding: 28px 16px 20px; }
+    body { padding: 16px 14px 12px; }
     .label { font-size: 10px; max-width: 70px; }
     .date { font-size: 9px; }
-    .header { margin-bottom: 24px; }
+    .header { margin-bottom: 14px; }
   }
 </style>
 </head>
