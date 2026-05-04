@@ -7,23 +7,49 @@
 <style>
   :root {
     --step: 1;
-    --accent: #18181b;
-    --muted: #e4e4e7;
-    --text: #18181b;
-    --text-muted: #a1a1aa;
-    --dot-bg: #ffffff;
-    --halo: rgba(24, 24, 27, 0.07);
+    --accent: oklch(20% 0.005 270);
+    --muted: oklch(92% 0.005 270);
+    --text: oklch(20% 0.005 270);
+    --text-muted: oklch(60% 0.01 270);
+    --dot-bg: oklch(99% 0.002 270);
+    --halo: oklch(20% 0.005 270 / 0.07);
+    --active: oklch(62% 0.18 148);
+    --active-soft: oklch(62% 0.18 148 / 0.45);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --accent: #fafafa;
-      --muted: #3f3f46;
-      --text: #fafafa;
-      --text-muted: #71717a;
+      --accent: oklch(96% 0.005 270);
+      --muted: oklch(28% 0.008 270);
+      --text: oklch(96% 0.005 270);
+      --text-muted: oklch(55% 0.012 270);
       --dot-bg: transparent;
-      --halo: rgba(250, 250, 250, 0.08);
+      --halo: oklch(96% 0.005 270 / 0.08);
+      --active: oklch(72% 0.17 148);
+      --active-soft: oklch(72% 0.17 148 / 0.55);
     }
+  }
+
+  :root[data-theme="light"] {
+    --accent: oklch(20% 0.005 270);
+    --muted: oklch(92% 0.005 270);
+    --text: oklch(20% 0.005 270);
+    --text-muted: oklch(60% 0.01 270);
+    --dot-bg: oklch(99% 0.002 270);
+    --halo: oklch(20% 0.005 270 / 0.07);
+    --active: oklch(62% 0.18 148);
+    --active-soft: oklch(62% 0.18 148 / 0.45);
+  }
+
+  :root[data-theme="dark"] {
+    --accent: oklch(96% 0.005 270);
+    --muted: oklch(28% 0.008 270);
+    --text: oklch(96% 0.005 270);
+    --text-muted: oklch(55% 0.012 270);
+    --dot-bg: transparent;
+    --halo: oklch(96% 0.005 270 / 0.08);
+    --active: oklch(72% 0.17 148);
+    --active-soft: oklch(72% 0.17 148 / 0.55);
   }
 
   * { box-sizing: border-box; }
@@ -61,6 +87,24 @@
     font-size: 12px;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meta-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--active);
+    box-shadow: 0 0 0 0 var(--active-soft);
+    animation: meta-pulse 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes meta-pulse {
+    0%   { box-shadow: 0 0 0 0 var(--active-soft); }
+    70%  { box-shadow: 0 0 0 5px oklch(72% 0.17 148 / 0); }
+    100% { box-shadow: 0 0 0 0 oklch(72% 0.17 148 / 0); }
   }
 
   .rail {
@@ -71,7 +115,7 @@
 
   .line-bg, .line-fill {
     position: absolute;
-    top: 13px;
+    top: 12px;
     height: 2px;
     border-radius: 999px;
   }
@@ -110,7 +154,7 @@
     font-size: 11px;
     font-weight: 600;
     color: var(--text-muted);
-    transition: all 300ms ease;
+    transition: border-color 300ms ease, color 300ms ease, background 300ms ease;
   }
 
   .step[data-state="done"] .dot {
@@ -120,13 +164,21 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    .step[data-state="done"] .dot { color: #18181b; }
+    .step[data-state="done"] .dot { color: oklch(20% 0.005 270); }
   }
+  :root[data-theme="dark"] .step[data-state="done"] .dot { color: oklch(20% 0.005 270); }
+  :root[data-theme="light"] .step[data-state="done"] .dot { color: oklch(99% 0.002 270); }
 
   .step[data-state="active"] .dot {
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 0 5px var(--halo);
+    border-color: var(--active);
+    color: var(--active);
+    animation: dot-pulse 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes dot-pulse {
+    0%   { box-shadow: 0 0 0 0 var(--active-soft); }
+    70%  { box-shadow: 0 0 0 11px oklch(72% 0.17 148 / 0); }
+    100% { box-shadow: 0 0 0 0 oklch(72% 0.17 148 / 0); }
   }
 
   .label {
@@ -144,15 +196,17 @@
     color: var(--text);
   }
 
+  .step[data-state="active"] .label {
+    color: var(--active);
+    font-weight: 600;
+  }
+
   .date {
     font-size: 10px;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
-
-  .line-bg, .line-fill { top: 12px; }
 
   @media (max-width: 520px) {
     body { padding: 16px 14px 12px; }
@@ -165,25 +219,35 @@
 <body>
   <div class="tracker">
     <div class="header">
-      <span class="title">Tracking — entrega em 7 dias</span>
-      <span class="meta" id="meta">1/5 · em andamento</span>
+      <span class="title">Tracking : entrega em 7 dias</span>
+      <span class="meta" id="meta">
+        <span class="meta-dot" aria-hidden="true"></span>
+        <span id="meta-text">1/5 · em andamento</span>
+      </span>
     </div>
 
     <div class="rail">
       <div class="line-bg"></div>
       <div class="line-fill"></div>
 
-      <div class="step"><div class="dot">1</div><div class="label">Diagnóstico</div><div class="date">seg–ter</div></div>
-      <div class="step"><div class="dot">2</div><div class="label">Tags &amp; snippets</div><div class="date">qua</div></div>
-      <div class="step"><div class="dot">3</div><div class="label">Testar &amp; validar</div><div class="date">qui–sex</div></div>
-      <div class="step"><div class="dot">4</div><div class="label">Dashboard</div><div class="date">sáb</div></div>
-      <div class="step"><div class="dot">5</div><div class="label">Entrega</div><div class="date">dom</div></div>
+      <div class="step"><div class="dot">1</div><div class="label">Diagnóstico</div><div class="date">04/05</div></div>
+      <div class="step"><div class="dot">2</div><div class="label">Tags &amp; snippets</div></div>
+      <div class="step"><div class="dot">3</div><div class="label">Testar &amp; validar</div><div class="date">08/05</div></div>
+      <div class="step"><div class="dot">4</div><div class="label">Dashboard</div></div>
+      <div class="step"><div class="dot">5</div><div class="label">Entrega</div><div class="date">10/05</div></div>
     </div>
   </div>
 
   <script>
-    // ⬇️ Pra atualizar o progresso, troque só esse número (1 a 5):
-    const STEP = 1;
+    // Theme: ?theme=dark | ?theme=light | (default: auto via prefers-color-scheme)
+    const params = new URLSearchParams(location.search);
+    const theme = params.get("theme");
+    if (theme === "dark" || theme === "light") {
+      document.documentElement.dataset.theme = theme;
+    }
+
+    // Step: ?step=N na URL OU edita const STEP abaixo
+    const STEP = Number(params.get("step")) || 1;
 
     const steps = document.querySelectorAll(".step");
     steps.forEach((el, i) => {
@@ -191,8 +255,13 @@
       el.dataset.state = idx < STEP ? "done" : idx === STEP ? "active" : "pending";
     });
     document.documentElement.style.setProperty("--step", STEP);
-    document.getElementById("meta").textContent =
+    document.getElementById("meta-text").textContent =
       STEP >= 5 ? "5/5 · entregue" : `${STEP}/5 · em andamento`;
+
+    // Esconde o ponto verde do header quando entregue
+    if (STEP >= 5) {
+      document.querySelector(".meta-dot").style.display = "none";
+    }
   </script>
 </body>
 </html>
