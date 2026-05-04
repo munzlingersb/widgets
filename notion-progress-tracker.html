@@ -170,8 +170,9 @@
   :root[data-theme="light"] .step[data-state="done"] .dot { color: oklch(99% 0.002 270); }
 
   .step[data-state="active"] .dot {
+    background: var(--active);
     border-color: var(--active);
-    color: var(--active);
+    color: oklch(99% 0.002 270);
     animation: dot-pulse 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
