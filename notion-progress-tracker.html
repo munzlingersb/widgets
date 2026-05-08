@@ -128,7 +128,7 @@
 
   .line-fill {
     left: 10%;
-    background: var(--accent);
+    background: oklch(65% 0.008 270);
     width: calc((var(--step) - 1) / 4 * 80%);
     transition: width 500ms cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -158,16 +158,10 @@
   }
 
   .step[data-state="done"] .dot {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--dot-bg);
+    background: oklch(65% 0.008 270);
+    border-color: oklch(65% 0.008 270);
+    color: oklch(99% 0.002 270);
   }
-
-  @media (prefers-color-scheme: dark) {
-    .step[data-state="done"] .dot { color: oklch(20% 0.005 270); }
-  }
-  :root[data-theme="dark"] .step[data-state="done"] .dot { color: oklch(20% 0.005 270); }
-  :root[data-theme="light"] .step[data-state="done"] .dot { color: oklch(99% 0.002 270); }
 
   .step[data-state="active"] .dot {
     background: var(--active);
